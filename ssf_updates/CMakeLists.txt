@@ -33,6 +33,16 @@ target_link_libraries(pose_sensor ${catkin_LIBRARIES})
 
 add_executable(position_sensor src/main.cpp src/position_sensor.cpp)
 set_property(TARGET position_sensor PROPERTY COMPILE_DEFINITIONS POSITION_MEAS)
-
+add_dependencies(position_sensor ssf_updates_generate_messages_cpp)
 target_link_libraries(position_sensor ${catkin_LIBRARIES})
 
+add_executable(viconpos_sensor src/main.cpp src/viconpos_sensor.cpp)
+set_property(TARGET viconpos_sensor PROPERTY COMPILE_DEFINITIONS VICONPOS_MEAS)
+#add_compile_flags(viconpos_sensor "-O3")
+add_dependencies(viconpos_sensor ssf_updates_generate_messages_cpp)
+target_link_libraries(viconpos_sensor ${catkin_LIBRARIES})
+
+add_executable(snappos_sensor src/main.cpp src/snappos_sensor.cpp)
+set_property(TARGET snappos_sensor PROPERTY COMPILE_DEFINITIONS SNAPPOS_MEAS)
+add_dependencies(snappos_sensor ssf_updates_generate_messages_cpp)
+target_link_libraries(snappos_sensor ${catkin_LIBRARIES})

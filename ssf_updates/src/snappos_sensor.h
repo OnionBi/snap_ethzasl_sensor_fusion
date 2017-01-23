@@ -29,55 +29,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifdef POSE_MEAS
-#include "pose_measurements.h"
-#endif
-#ifdef POSITION_MEAS
-#include "position_measurements.h"
-#endif
-#ifdef VICONPOS_MEAS
-#include "viconpos_measurements.h"
-#endif
-#ifdef SNAPPOS_MEAS
-#include "snappos_measurements.h"
-#endif
+#ifndef SNAPPOS_SENSOR_H
+#define SNAPPOS_SENSOR_H
 
-int main(int argc, char** argv)
+#include <ssf_core/measurement.h>
+#include <ssf_updates/PositionWithCovarianceStamped.h>
+#include <geometry_msgs/PoseStamped.h>
+
+class PositionSensorHandler: public ssf_core::MeasurementHandler
 {
-	ros::init(argc, argv, "ssf_core");
-#ifdef POSE_MEAS
-	PoseMeasurements PoseMeas;
-	ROS_INFO_STREAM("Filter type: pose_sensor");
-#endif
+private:
+	// measurements
+//  Eigen::Quaternion<double> z_q_; /// attitude measurement camera seen from world - here we do not have an attitude measurement
+	Eigen::Matrix<double, 3, 1> z_p_; /// position measurement camera seen from world
+	double n_zp_ /*, n_zq_*/; /// position and attitude measurement noise - here we do not have an attitude measurement
 
-#ifdef POSITION_MEAS
-	PositionMeasurements PositionMeas;
-	ROS_INFO_STREAM("Filter type: position_sensor");
-#endif
-#ifdef VICONPOS_MEAS
-        PositionMeasurements ViconPosMeas;
-        ROS_INFO_STREAM("Filter type: viconpos_sensor");
-#endif
-#ifdef SNAPPOS_MEAS
-	PositionMeasurements SnapPosMeas;
-	ROS_INFO_STREAM("Filter type: snappos_senspr");
-#endif
-	//  print published/subscribed topics
-	ros::V_string topics;
-	ros::this_node::getSubscribedTopics(topics);
-	std::string nodeName = ros::this_node::getName();
-	std::string topicsStr = nodeName + ":\n\tsubscribed to topics:\n";
-	for(unsigned int i=0; i<topics.size(); i++)
-		topicsStr+=("\t\t" + topics.at(i) + "\n");
+	ros::Subscriber subMeasurement_;
 
-	topicsStr += "\tadvertised topics:\n";
-	ros::this_node::getAdvertisedTopics(topics);
-	for(unsigned int i=0; i<topics.size(); i++)
-		topicsStr+=("\t\t" + topics.at(i) + "\n");
+	bool measurement_world_sensor_; ///< defines if the pose of the sensor is measured in world coordinates (true, default) or vice versa (false, e.g. PTAM)
+	bool use_fixed_covariance_; ///< use fixed covariance set by dynamic reconfigure
 
-	ROS_INFO_STREAM(""<< topicsStr);
+	void subscribe();
+	//void measurementCallback(const ssf_updates::PositionWithCovarianceStampedConstPtr & msg);
+	void measurementCallback(const geometry_msgs::PoseStampedConstPtr & msg);
+	void noiseConfig(ssf_core::SSF_CoreConfig& config, uint32_t level);
 
-	ros::spin();
+public:
+	PositionSensorHandler();
+	PositionSensorHandler(ssf_core::Measurements* meas);
+};
 
-	return 0;
-}
+#endif /* SNAPPOS_SENSOR_H */

@@ -31,5 +31,5 @@ init/q_wv/x: 0.0
 init/q_wv/y: 0.0
 init/q_wv/z: 0.0
 
-use_fixed_covariance: true
-measurement_world_sensor: true  # selects if sensor measures its position w.r.t. world (true, e.g. Vicon) or the position of the world coordinate system w.r.t. the sensor (false, e.g. ethzasl_ptam)
+use_fixed_covariance: false
+measurement_world_sensor: false  # selects if sensor measures its position w.r.t. world (true, e.g. Vicon) or the position of the world coordinate system w.r.t. the sensor (false, e.g. ethzasl_ptam)
