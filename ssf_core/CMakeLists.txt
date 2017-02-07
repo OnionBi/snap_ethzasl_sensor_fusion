@@ -34,7 +34,7 @@ generate_dynamic_reconfigure_options(cfg/SSF_Core.cfg)
 
 catkin_package(
     DEPENDS
-    CATKIN_DEPENDS roscpp sensor_msgs dynamic_reconfigure sensor_fusion_comm
+    CATKIN_DEPENDS roscpp sensor_msgs dynamic_reconfigure sensor_fusion_comm geometry_msgs
     INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS}
     LIBRARIES ssf_core
 )
@@ -43,3 +43,6 @@ add_library(ssf_core src/SSF_Core.cpp src/measurement.cpp src/state.cpp)
 add_dependencies(ssf_core ${PROJECT_NAME}_gencfg)
 target_link_libraries(ssf_core ${catkin_LIBRRIES})
 
+add_executable(ssf_visualizer src/SSF_Visualizer.cpp)
+add_dependencies(ssf_visualizer DEPS ${${PROJECT_NAME}_EXPORTED_TARGETS})
+target_link_libraries(ssf_visualizer ${catkin_LIBRARIES})

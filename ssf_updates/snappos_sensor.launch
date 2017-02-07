@@ -1,0 +1,8 @@
+<launch>
+    <node name="snappos_sensor" pkg="ssf_updates" type="snappos_sensor" clear_params="true" output="screen">
+            <remap from="ssf_core/imu_state_input" to="/mavros/imu/data" />
+            <remap from="ssf_core/position_measurement" to="/mavros/local_position/pose" />
+
+            <rosparam file="$(find ssf_updates)/snappos_sensor_fix.yaml"/>
+    </node>
+</launch>
