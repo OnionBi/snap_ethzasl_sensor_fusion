@@ -149,6 +149,9 @@ void SSF_Core::initialize(const Eigen::Matrix<double, 3, 1> & p, const Eigen::Ma
   // init external propagation
   msgCorrect_.header.stamp = ros::Time::now();
   msgCorrect_.header.seq = 0;
+  msgCorrect_.header.frame_id = "/image";
+  //ROS_WARN(msgCorrect_.header.frame_id);
+  
   msgCorrect_.angular_velocity.x = 0;
   msgCorrect_.angular_velocity.y = 0;
   msgCorrect_.angular_velocity.z = 0;
@@ -222,7 +225,9 @@ void SSF_Core::imuCallback(const sensor_msgs::ImuConstPtr & msg)
 
   msgPose_.header.stamp = msg->header.stamp;
   msgPose_.header.seq = msg->header.seq;
-
+  msgPose_.header.frame_id = msg->header.frame_id;
+  //ROS_WARN(msgPose_.header.frame_id);
+  
   StateBuffer_[(unsigned char)(idx_state_ - 1)].toPoseMsg(msgPose_);
   pubPose_.publish(msgPose_);
 
@@ -306,6 +311,8 @@ void SSF_Core::stateCallback(const sensor_fusion_comm::ExtEkfConstPtr & msg)
 
   msgPose_.header.stamp = msg->header.stamp;
   msgPose_.header.seq = msg->header.seq;
+  msgPose_.header.frame_id = msg->header.seq;
+  //ROS_WARN(msgPose_.header.frame_id);
 
   StateBuffer_[(unsigned char)(idx_state_ - 1)].toPoseMsg(msgPose_);
   pubPose_.publish(msgPose_);
@@ -620,6 +627,9 @@ bool SSF_Core::applyCorrection(unsigned char idx_delaystate, const ErrorState & 
   // publish correction for external propagation
   msgCorrect_.header.stamp = ros::Time::now();
   msgCorrect_.header.seq = seq_m;
+  msgCorrect_.header.frame_id = "/image";
+  //ROS_WARN(msgCorrect_.header.frame_id);
+  
   msgCorrect_.angular_velocity.x = 0;
   msgCorrect_.angular_velocity.y = 0;
   msgCorrect_.angular_velocity.z = 0;
